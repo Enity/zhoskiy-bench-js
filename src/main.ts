@@ -5,10 +5,13 @@ import { getManager } from 'typeorm';
 import { Bear } from './api/bear.entity';
 import { ValidationPipe } from '@nestjs/common';
 
-const { ZHOSKA_NAPOLNIT_DB } = process.env;
+const { ZHOSKA_NAPOLNIT_DB, USE_FASTIFY = 'false' } = process.env;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, new FastifyAdapter());
+  const app =
+    USE_FASTIFY === 'true'
+      ? await NestFactory.create(AppModule, new FastifyAdapter())
+      : await NestFactory.create(AppModule);
 
   if (ZHOSKA_NAPOLNIT_DB === 'true') {
     const entityManager = getManager();
